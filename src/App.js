@@ -1,28 +1,58 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import AddNoteForm from './components/AddNoteForm.js';
+import NoteList from './components/NoteList.js';
+import localStorage from 'local-storage';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+const App = ({classes}) => {
+  const [notes, setNotes] = useState([]);
+
+  const handleAdd = (newNote) => {
+    setNotes(sortByDate([...notes, newNote]));
+  };
+
+  const handleNotesUpdate = (updatedNotes) => {
+    setNotes([...updatedNotes]);
   }
-}
 
-export default App;
+  const sortByDate = (list) => {
+    return list.sort((a, b) => (a.date < b.date) ? 1 : -1);
+  }
+
+  useEffect(() => {
+    !!notes && !!notes.length > 0 && localStorage.set('notes', notes);
+  }, [notes]);
+
+  useEffect(() => {
+    const storedNotes = localStorage.get('notes');
+    storedNotes.length > 0 && setNotes(storedNotes);
+  }, []);
+
+  return (
+    <div className={classes.root}>
+      <Grid container spacing={24}>
+        <Grid item md={9} sm={12} xs={12}  className={classes.noteContainer}>
+          <NoteList notes={notes} handleNotesUpdate={handleNotesUpdate} />
+        </Grid>
+        <Grid item md={3} sm={12} xs={12}>
+          <AddNoteForm handleAdd={handleAdd} />
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+const styles = (theme) => ({
+  root: {
+    flexGrow: 1,
+    maxWidth: 1280,
+    minWidth: 360,
+    margin: 24,
+  },
+  noteContainer: {
+    overflowY: 'hidden',
+  },
+});
+
+export default withStyles(styles)(App);
