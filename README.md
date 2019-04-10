@@ -1,6 +1,6 @@
 # React Hooks Notes
 
-Simple web app to save, delete and filter notes.
+Simple web app to filter, fav, save and delete notes.
 
 This app was written as an example of how to use [react hooks](https://reactjs.org/docs/hooks-reference.html), specifically useState and useEffect.
 
