@@ -46,6 +46,10 @@ const NoteList = ({notes, handleNotesUpdate, classes}) => {
     handleNotesUpdate(updatedNotes);
   }
 
+  const formatContent = (content) => {
+    return {__html: content.replace(/(\r\n|\n|\r)/gm, '<br/>')};
+  }
+
   return (
     <Fragment>
       {!!notes && notes.length > 0 ? (
@@ -104,9 +108,13 @@ const NoteList = ({notes, handleNotesUpdate, classes}) => {
                       <Typography component="span" color="textSecondary">
                         <Time type="time" date={note.date} />
                       </Typography>
-                      <Typography component="span" className={classes.marginTop} variant="body1" color="textSecondary">
-                        {note.content}
-                      </Typography>
+                      <Typography 
+                        component="span" 
+                        className={classes.marginTop} 
+                        variant="body1" 
+                        color="textSecondary" 
+                        dangerouslySetInnerHTML={formatContent(note.content)}
+                      />                        
                     </Fragment>
                   }
                 />
