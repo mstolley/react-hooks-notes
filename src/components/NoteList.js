@@ -16,6 +16,86 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import TextField from '@material-ui/core/TextField';
 import Time from './Time.js';
+import ComponentHeader from './ComponentHeader.js'
+import ReactMarkdown from 'react-markdown';
+
+const FilterList = ({filterType, handleFilterTypeChange, filter, handleFilterChange, classes}) => {
+  return (
+    <div className={classes.marginTop}>
+      <FormControl variant="outlined">
+        <InputLabel htmlFor="filter-type">Type</InputLabel>
+        <Select
+          value={filterType}
+          onChange={handleFilterTypeChange}
+          input={
+            <OutlinedInput
+            id="filter-type"
+            name="filter-type"
+            labelWidth={36}
+            />
+          }
+        >
+          <MenuItem value="subject">Subject</MenuItem>
+          <MenuItem value="contact">Contact</MenuItem>
+          <MenuItem value="content">Content</MenuItem>
+        </Select>
+      </FormControl>
+      <TextField
+        variant="outlined"
+        id="notesFilterField"
+        label="Filter"
+        placeholder="Filter Notes"
+        className={classes.textField}
+        margin="none"
+        value={filter}
+        name="filter"
+        onChange={handleFilterChange}
+      />
+    </div>
+  )
+}
+
+const DisplayList = ({classes, notes, filterType, filter, favNote, deleteNote}) => {
+  return (
+    <List className={classes.scroller}>
+      {notes
+        .filter(note => note[filterType].toLowerCase().includes(filter.toLowerCase()))
+        .map((note, index) =>
+        <ListItem key={index} className={`${classes.listItem} ${note.isFav ? 'fav' : ''}`}>
+          <div className={classes.listInfo}>
+            <Typography component="h3" color="textPrimary">
+            {note.subject}
+            </Typography>
+            <Typography component="span" color="textPrimary">
+              {note.contact}
+            </Typography>
+            <Typography component="span" className={classes.marginTop} color="textSecondary">
+              <Time type="date" date={note.date} />
+            </Typography>
+            <Typography component="span" color="textSecondary">
+              <Time type="time" date={note.date} />
+            </Typography>
+            <ReactMarkdown source={note.content} />
+          </div>
+          <div className={classes.listActions}>
+            {note.isFav ? (
+              <IconButton aria-label="Favorite Selected" value={index} onClick={favNote}>
+                <FavoriteIcon />
+              </IconButton>
+            ) : (
+              <IconButton aria-label="Favorite" value={index} onClick={favNote}>
+                <FavoriteBorderIcon />
+              </IconButton>
+            )}
+            <IconButton aria-label="Delete" value={index} onClick={deleteNote}>
+              <HighlightOffIcon />
+            </IconButton>
+          </div>
+        </ListItem>
+      )}
+    </List>
+  )
+}
 
 const NoteList = ({notes, handleNotesUpdate, classes}) => {
   const isLargeView = useMediaQuery('(min-width:960px)');
@@ -46,93 +126,28 @@ const NoteList = ({notes, handleNotesUpdate, classes}) => {
     handleNotesUpdate(updatedNotes);
   }
 
-  const formatContent = (content) => {
-    return {__html: content.replace(/(\r\n|\n|\r)/gm, '<br/>')};
-  }
-
   return (
     <Fragment>
       {!!notes && notes.length > 0 ? (
         <div className={(isLargeView ? classes.flexFullContainer : classes.flexContainer)} >
           <div className={classes.headerContainer}>
-            <Typography component="div" variant="h4">
-              Notes
-            </Typography>
-            <div className={classes.marginTop}>
-              <FormControl variant="outlined">
-                <InputLabel htmlFor="filter-type">Type</InputLabel>
-                <Select
-                 value={filterType}
-                 onChange={handleFilterTypeChange}
-                 input={
-                   <OutlinedInput
-                    id="filter-type"
-                    name="filter-type"
-                    labelWidth={36}
-                   />
-                 }
-                >
-                  <MenuItem value="subject">Subject</MenuItem>
-                  <MenuItem value="contact">Contact</MenuItem>
-                  <MenuItem value="content">Content</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                variant="outlined"
-                id="notesFilterField"
-                label="Filter"
-                placeholder="Filter Notes"
-                className={classes.textField}
-                margin="none"
-                value={filter}
-                name="filter"
-                onChange={handleFilterChange}
-              />
-            </div>
+            <ComponentHeader>Notes</ComponentHeader>
+            <FilterList 
+              filterType={filterType}
+              handleFilterTypeChange={handleFilterTypeChange}
+              filter={filter}
+              handleFilterChange={handleFilterChange}
+              classes={classes}
+            />
           </div>
-          <List className={classes.scroller}>
-            {notes
-              .filter(note => note[filterType].toLowerCase().includes(filter.toLowerCase()))
-              .map((note, index) =>
-              <ListItem key={index} className={`${classes.listItem} ${note.isFav ? 'fav' : ''}`}>
-                <ListItemText
-                  primary={note.subject}
-                  secondary={
-                    <Fragment>
-                      <Typography component="span" color="textPrimary">
-                        {note.contact}
-                      </Typography>
-                      <Typography component="span" className={classes.marginTop} color="textSecondary">
-                        <Time type="date" date={note.date} />
-                      </Typography>
-                      <Typography component="span" color="textSecondary">
-                        <Time type="time" date={note.date} />
-                      </Typography>
-                      <Typography 
-                        component="span" 
-                        className={classes.marginTop} 
-                        variant="body1" 
-                        color="textSecondary" 
-                        dangerouslySetInnerHTML={formatContent(note.content)}
-                      />                        
-                    </Fragment>
-                  }
-                />
-                {note.isFav ? (
-                  <IconButton aria-label="Favorite Selected" value={index} onClick={favNote}>
-                    <FavoriteIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton aria-label="Favorite" value={index} onClick={favNote}>
-                    <FavoriteBorderIcon />
-                  </IconButton>
-                )}
-                <IconButton aria-label="Delete" value={index} onClick={deleteNote}>
-                  <HighlightOffIcon />
-                </IconButton>
-              </ListItem>
-            )}
-          </List>
+          <DisplayList
+            classes={classes}
+            notes={notes}
+            filterType={filterType}
+            filter={filter}
+            favNote={favNote}
+            deleteNote={deleteNote}
+          />
         </div>
       ) : (
         <Typography component="div" variant="h6">
@@ -173,6 +188,7 @@ const styles = (theme) => ({
   },
   listItem: {
     transitionDuration: '1s',
+    alignItems: 'flex-start',
 
     '&:nth-of-type(even)': {
       backgroundColor: "#eee",
@@ -185,6 +201,13 @@ const styles = (theme) => ({
     '&.fav': {
       backgroundColor: '#fff5a0'
     }
+  },
+  listInfo: {
+    width: 'calc(100% - 112px)',
+    paddingRight: 16
+  },
+  listActions: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)'
   },
   marginTop: {
     marginTop: 16

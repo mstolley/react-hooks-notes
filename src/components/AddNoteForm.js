@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
+import ComponentHeader from './ComponentHeader.js'
 
 const INITIAL_BLANK_STRING = '';
 
@@ -50,9 +50,7 @@ const AddNoteForm = ({handleAdd, classes}) => {
   return (
     <Fragment>
       <form onSubmit={(e) => e.preventDefault()}>
-        <Typography component="div" variant="h4">
-          Add Note
-        </Typography>
+        <ComponentHeader>Add Note</ComponentHeader>
         <TextField
           variant="outlined"
           id="contact-field"
