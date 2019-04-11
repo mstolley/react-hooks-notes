@@ -207,7 +207,8 @@ const styles = (theme) => ({
     paddingRight: 16
   },
   listActions: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)'
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderRadius: 4,
   },
   marginTop: {
     marginTop: 16
