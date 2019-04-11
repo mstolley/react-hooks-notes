@@ -212,6 +212,7 @@ const styles = (theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
+    borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
   },
   dateTime: {
     display: 'flex',
@@ -221,7 +222,7 @@ const styles = (theme) => ({
   },
   listActions: {
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    borderRadius: 4,
+    borderRadius: '4px 4px 0 0',
     display: 'flex',
     alignItems: 'center',
     padding: '0 6px'
