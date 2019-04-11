@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
@@ -63,10 +62,10 @@ const DisplayList = ({classes, notes, filterType, filter, favNote, deleteNote}) 
         .map((note, index) =>
         <ListItem key={index} className={`${classes.listItem} ${note.isFav ? 'fav' : ''}`}>
           <div className={classes.listInfo}>
-            <Typography component="h3" color="textPrimary">
+            <Typography component="h4" color="textPrimary">
             {note.subject}
             </Typography>
-            <Typography component="span" color="textPrimary">
+            <Typography component="h5" color="textPrimary">
               {note.contact}
             </Typography>
             <Typography component="span" className={classes.marginTop} color="textSecondary">
