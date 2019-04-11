@@ -61,35 +61,41 @@ const DisplayList = ({classes, notes, filterType, filter, favNote, deleteNote}) 
         .filter(note => note[filterType].toLowerCase().includes(filter.toLowerCase()))
         .map((note, index) =>
         <ListItem key={index} className={`${classes.listItem} ${note.isFav ? 'fav' : ''}`}>
-          <div className={classes.listInfo}>
-            <Typography component="h4" color="textPrimary">
-            {note.subject}
-            </Typography>
-            <Typography component="h5" color="textPrimary">
-              {note.contact}
-            </Typography>
-            <Typography component="span" className={classes.marginTop} color="textSecondary">
+          <div className={classes.listHeader}>
+            <div>
+              <Typography component="h5" variant="h5" color="textPrimary">
+                {note.subject}
+              </Typography>
+              <Typography component="h6" variant="subtitle1" color="textPrimary">
+                {note.contact}
+              </Typography>
+            </div>
+            <div className={classes.listActions}>
+              {note.isFav ? (
+                <IconButton aria-label="Favorite Selected" value={index} onClick={favNote}>
+                  <FavoriteIcon />
+                </IconButton>
+              ) : (
+                <IconButton aria-label="Favorite" value={index} onClick={favNote}>
+                  <FavoriteBorderIcon />
+                </IconButton>
+              )}
+              <IconButton aria-label="Delete" value={index} onClick={deleteNote}>
+                <HighlightOffIcon />
+              </IconButton>
+            </div>
+          </div>
+
+          <div className={classes.dateTime}>
+            <Typography component="span" color="textSecondary">
               <Time type="date" date={note.date} />
             </Typography>
             <Typography component="span" color="textSecondary">
               <Time type="time" date={note.date} />
             </Typography>
-            <ReactMarkdown source={note.content} />
           </div>
-          <div className={classes.listActions}>
-            {note.isFav ? (
-              <IconButton aria-label="Favorite Selected" value={index} onClick={favNote}>
-                <FavoriteIcon />
-              </IconButton>
-            ) : (
-              <IconButton aria-label="Favorite" value={index} onClick={favNote}>
-                <FavoriteBorderIcon />
-              </IconButton>
-            )}
-            <IconButton aria-label="Delete" value={index} onClick={deleteNote}>
-              <HighlightOffIcon />
-            </IconButton>
-          </div>
+
+          <ReactMarkdown source={note.content} />
         </ListItem>
       )}
     </List>
@@ -188,6 +194,7 @@ const styles = (theme) => ({
   listItem: {
     transitionDuration: '1s',
     alignItems: 'flex-start',
+    flexDirection: 'column',
 
     '&:nth-of-type(even)': {
       backgroundColor: "#eee",
@@ -201,13 +208,23 @@ const styles = (theme) => ({
       backgroundColor: '#fff5a0'
     }
   },
-  listInfo: {
-    width: 'calc(100% - 112px)',
-    paddingRight: 16
+  listHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  dateTime: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 16
   },
   listActions: {
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
     borderRadius: 4,
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 6px'
   },
   marginTop: {
     marginTop: 16
