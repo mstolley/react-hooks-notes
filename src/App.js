@@ -26,7 +26,7 @@ const App = ({classes}) => {
 
   useEffect(() => {
     const storedNotes = localStorage.get('notes');
-    storedNotes.length > 0 && setNotes(storedNotes);
+    !!storedNotes && storedNotes.length > 0 && setNotes(storedNotes);
   }, []);
 
   return (
