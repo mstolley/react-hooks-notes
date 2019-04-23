@@ -1,4 +1,8 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -8,7 +12,7 @@ import ComponentHeader from './ComponentHeader.js'
 
 const INITIAL_BLANK_STRING = '';
 
-const AddNoteForm = ({handleAdd, classes}) => {
+const AddNoteForm = ({ handleAdd, classes }) => {
   // use hooks
   const [contact, setContact] = useState(INITIAL_BLANK_STRING);
   const [subject, setSubject] = useState(INITIAL_BLANK_STRING);
@@ -33,7 +37,7 @@ const AddNoteForm = ({handleAdd, classes}) => {
       subject,
       content,
       'isFav': false,
-      'date': Date.now()
+      'date': Date.now(),
     };
     handleAdd(newNote);
     clearFields();
@@ -49,7 +53,7 @@ const AddNoteForm = ({handleAdd, classes}) => {
 
   return (
     <Fragment>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={e => e.preventDefault()}>
         <ComponentHeader>Add Note</ComponentHeader>
         <TextField
           variant="outlined"
@@ -59,8 +63,8 @@ const AddNoteForm = ({handleAdd, classes}) => {
           label="Contact"
           placeholder="Matthew Stolley"
           margin="normal"
-          value={contact} 
-          name="contact" 
+          value={contact}
+          name="contact"
           onChange={handleContactChange}
         />
         <TextField
@@ -71,8 +75,8 @@ const AddNoteForm = ({handleAdd, classes}) => {
           label="Subject"
           placeholder="Subject"
           margin="normal"
-          value={subject} 
-          name="subject" 
+          value={subject}
+          name="subject"
           onChange={handleSubjectChange}
         />
         <TextField
@@ -85,31 +89,42 @@ const AddNoteForm = ({handleAdd, classes}) => {
           label="Content"
           placeholder="Content"
           margin="normal"
-          value={content} 
-          name="content" 
+          value={content}
+          name="content"
           onChange={handleContentChange}
         />
         <div className={classes.marginTop20}>
-          <Button color="default" variant="contained" disabled={isFormEmpty} onClick={clearFields}>
+          <Button
+            color="default"
+            variant="contained"
+            disabled={isFormEmpty}
+            onClick={clearFields}
+          >
             <ClearIcon />
             Clear
           </Button>
-          <Button color="primary" variant="contained" className={classes.floatRight} disabled={!isFormValid} onClick={addNote}>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.floatRight}
+            disabled={!isFormValid}
+            onClick={addNote}
+          >
             <AddIcon />
             Add
           </Button>
         </div>
-      </form>       
+      </form>
     </Fragment>
   );
 };
 
 const styles = theme => ({
   floatRight: {
-    float: 'right'
+    float: 'right',
   },
   marginTop20: {
-    marginTop: 16
+    marginTop: 16,
   },
 });
 

@@ -5,7 +5,7 @@ import AddNoteForm from './components/AddNoteForm.js';
 import NoteList from './components/NoteList.js';
 import localStorage from 'local-storage';
 
-const App = ({classes}) => {
+const App = ({ classes }) => {
   const [notes, setNotes] = useState([]);
 
   const handleAdd = (newNote) => {
@@ -16,9 +16,7 @@ const App = ({classes}) => {
     setNotes([...updatedNotes]);
   }
 
-  const sortByDate = (list) => {
-    return list.sort((a, b) => (a.date < b.date) ? 1 : -1);
-  }
+  const sortByDate = list => list.sort((a, b) => (a.date < b.date) ? 1 : -1)
 
   useEffect(() => {
     !!notes && !!notes.length > 0 && localStorage.set('notes', notes);
@@ -32,10 +30,21 @@ const App = ({classes}) => {
   return (
     <div className={classes.root}>
       <Grid container spacing={24}>
-        <Grid item md={9} sm={12} xs={12}  className={classes.noteContainer}>
+        <Grid
+          item
+          md={9}
+          sm={12}
+          xs={12}
+          className={classes.noteContainer}
+        >
           <NoteList notes={notes} handleNotesUpdate={handleNotesUpdate} />
         </Grid>
-        <Grid item md={3} sm={12} xs={12}>
+        <Grid
+          item
+          md={3}
+          sm={12}
+          xs={12}
+        >
           <AddNoteForm handleAdd={handleAdd} />
         </Grid>
       </Grid>
@@ -43,7 +52,7 @@ const App = ({classes}) => {
   );
 };
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     flexGrow: 1,
     maxWidth: 1280,

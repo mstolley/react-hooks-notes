@@ -1,6 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
+import {
+  unstable_useMediaQuery as useMediaQuery,
+} from '@material-ui/core/useMediaQuery';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
@@ -18,97 +20,114 @@ import Time from './Time.js';
 import ComponentHeader from './ComponentHeader.js'
 import ReactMarkdown from 'react-markdown';
 
-const FilterList = ({filterType, handleFilterTypeChange, filter, handleFilterChange, classes}) => {
-  return (
-    <div className={classes.marginTop}>
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="filter-type">Type</InputLabel>
-        <Select
-          value={filterType}
-          onChange={handleFilterTypeChange}
-          input={
-            <OutlinedInput
+const FilterList = ({ filterType, handleFilterTypeChange, filter, handleFilterChange, classes }) => (
+  <div className={classes.marginTop}>
+    <FormControl variant="outlined">
+      <InputLabel htmlFor="filter-type">Type</InputLabel>
+      <Select
+        value={filterType}
+        onChange={handleFilterTypeChange}
+        input={
+          <OutlinedInput
             id="filter-type"
             name="filter-type"
             labelWidth={36}
-            />
-          }
-        >
-          <MenuItem value="subject">Subject</MenuItem>
-          <MenuItem value="contact">Contact</MenuItem>
-          <MenuItem value="content">Content</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        variant="outlined"
-        id="notesFilterField"
-        label="Filter"
-        placeholder="Filter Notes"
-        className={classes.textField}
-        margin="none"
-        value={filter}
-        name="filter"
-        onChange={handleFilterChange}
-      />
-    </div>
-  )
-}
+          />
+        }
+      >
+        <MenuItem value="subject">Subject</MenuItem>
+        <MenuItem value="contact">Contact</MenuItem>
+        <MenuItem value="content">Content</MenuItem>
+      </Select>
+    </FormControl>
+    <TextField
+      variant="outlined"
+      id="notesFilterField"
+      label="Filter"
+      placeholder="Filter Notes"
+      className={classes.textField}
+      margin="none"
+      value={filter}
+      name="filter"
+      onChange={handleFilterChange}
+    />
+  </div>
+)
 
-const DisplayList = ({classes, notes, filterType, filter, favNote, deleteNote}) => {
-  return (
-    <List className={classes.scroller}>
-      {notes
-        .filter(note => note[filterType].toLowerCase().includes(filter.toLowerCase()))
-        .map((note, index) =>
-        <ListItem key={index} className={`${classes.listItem} ${note.isFav ? 'fav' : ''}`}>
-          <div className={classes.listHeader}>
-            <div>
-              <Typography component="h5" variant="h5" color="textPrimary">
-                {note.subject}
+const DisplayList = ({ classes, notes, filterType, filter, favNote, deleteNote }) => (
+  <List className={classes.scroller}>
+    {notes
+      .filter(note => note[filterType].toLowerCase().includes(filter.toLowerCase()))
+      .map((note, index) =>
+        (
+          <ListItem
+            key={index}
+            className={`${classes.listItem} ${note.isFav ? 'fav' : ''}`}
+          >
+            <div className={classes.listHeader}>
+              <div>
+                <Typography component="h5" variant="h5" color="textPrimary">
+                  {note.subject}
+                </Typography>
+                <Typography
+                  component="h6"
+                  variant="subtitle1"
+                  color="textPrimary"
+                >
+                  {note.contact}
+                </Typography>
+              </div>
+              <div className={classes.listActions}>
+                {note.isFav ? (
+                  <IconButton
+                    aria-label="Favorite Selected"
+                    value={index}
+                    onClick={favNote}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    aria-label="Favorite"
+                    value={index}
+                    onClick={favNote}
+                  >
+                    <FavoriteBorderIcon />
+                  </IconButton>
+                )}
+                <IconButton
+                  aria-label="Delete"
+                  value={index}
+                  onClick={deleteNote}
+                >
+                  <HighlightOffIcon />
+                </IconButton>
+              </div>
+            </div>
+
+            <div className={classes.dateTime}>
+              <Typography component="span" color="textSecondary">
+                <Time type="date" date={note.date} />
               </Typography>
-              <Typography component="h6" variant="subtitle1" color="textPrimary">
-                {note.contact}
+              <Typography component="span" color="textSecondary">
+                <Time type="time" date={note.date} />
               </Typography>
             </div>
-            <div className={classes.listActions}>
-              {note.isFav ? (
-                <IconButton aria-label="Favorite Selected" value={index} onClick={favNote}>
-                  <FavoriteIcon />
-                </IconButton>
-              ) : (
-                <IconButton aria-label="Favorite" value={index} onClick={favNote}>
-                  <FavoriteBorderIcon />
-                </IconButton>
-              )}
-              <IconButton aria-label="Delete" value={index} onClick={deleteNote}>
-                <HighlightOffIcon />
-              </IconButton>
-            </div>
-          </div>
 
-          <div className={classes.dateTime}>
-            <Typography component="span" color="textSecondary">
-              <Time type="date" date={note.date} />
-            </Typography>
-            <Typography component="span" color="textSecondary">
-              <Time type="time" date={note.date} />
-            </Typography>
-          </div>
-
-          <ReactMarkdown source={note.content} />
-        </ListItem>
+            <ReactMarkdown source={note.content} />
+          </ListItem>
+        )
       )}
-    </List>
-  )
-}
+  </List>
+)
 
-const NoteList = ({notes, handleNotesUpdate, classes}) => {
+const NoteList = ({ notes, handleNotesUpdate, classes }) => {
   const isLargeView = useMediaQuery('(min-width:960px)');
 
   // use hooks
   const [filterType, setFilterType] = useState('subject');
   const [filter, setFilter] = useState('');
-  
+
   const handleFilterTypeChange = event => setFilterType(event.target.value);
   const handleFilterChange = event => setFilter(event.target.value);
 
@@ -123,7 +142,7 @@ const NoteList = ({notes, handleNotesUpdate, classes}) => {
     const updatedNotes = notes.map((note, i) => {
       if (i === parseInt(noteIndex)) {
         const isFav = note.isFav = !note.isFav;
-        return {...note, isFav};
+        return { ...note, isFav };
       } else {
         return note;
       }
@@ -134,10 +153,12 @@ const NoteList = ({notes, handleNotesUpdate, classes}) => {
   return (
     <Fragment>
       {!!notes && notes.length > 0 ? (
-        <div className={(isLargeView ? classes.flexFullContainer : classes.flexContainer)} >
+        <div
+          className={(isLargeView ? classes.flexFullContainer : classes.flexContainer)}
+        >
           <div className={classes.headerContainer}>
             <ComponentHeader>Notes</ComponentHeader>
-            <FilterList 
+            <FilterList
               filterType={filterType}
               handleFilterTypeChange={handleFilterTypeChange}
               filter={filter}
@@ -163,11 +184,11 @@ const NoteList = ({notes, handleNotesUpdate, classes}) => {
   );
 };
 
-const styles = (theme) => ({
+const styles = theme => ({
   flexContainer: {
     display: 'flex',
     flexDirection: 'column',
-    height: 'calc(100vh - 472px)' // < 960
+    height: 'calc(100vh - 472px)', // < 960
   },
   flexFullContainer: {
     display: 'flex',
@@ -178,7 +199,7 @@ const styles = (theme) => ({
     order: 1,
     flexShrink: 0,
     flexBasis: 39,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   scroller: {
     order: 2,
@@ -189,7 +210,7 @@ const styles = (theme) => ({
 
     '&:hover': {
       borderColor: "#212121",
-    }
+    },
   },
   listItem: {
     transitionDuration: '1s',
@@ -200,35 +221,35 @@ const styles = (theme) => ({
       backgroundColor: "#eee",
 
       '&.fav': {
-        backgroundColor: '#e2da8c'
-      }
+        backgroundColor: '#e2da8c',
+      },
     },
 
     '&.fav': {
-      backgroundColor: '#fff5a0'
-    }
+      backgroundColor: '#fff5a0',
+    },
   },
   listHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
-    borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
+    borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
   },
   dateTime: {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 16
+    marginTop: 16,
   },
   listActions: {
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
     borderRadius: '4px 4px 0 0',
     display: 'flex',
     alignItems: 'center',
-    padding: '0 6px'
+    padding: '0 6px',
   },
   marginTop: {
-    marginTop: 16
+    marginTop: 16,
   },
 });
 
